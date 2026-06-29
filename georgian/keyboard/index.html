@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Georgian keyboard</title>
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@100..900&display=swap">
+
+	<link rel="stylesheet" href="../../assets/css/main.css">
+
+	<style>
+        .foreign {
+            font-family: 'Noto Sans Georgian', 'Noto Sans', sans-serif;
+        }
+	</style>
+</head>
+<body>
+	<header id="header">
+		<h1>Langboard</h1>
+		<h2>Multilingual keyboard</h2>
+		<h3>Georgian</h3>
+	</header>
+	<nav id="nav">
+		<ul class="primary">
+			<li>Main page</li>
+		</ul>
+	</nav>
+	<section id="main">
+		<article class="keyboard">
+			<textarea class="foreign" aria-label="Virtual keyboard input" placeholder="Type here" id="keyboard-input"></textarea>
+		</article>
+		<article class="reference">
+
+		</article>
+	</section>
+	<footer id="footer">
+		Created by Michał Dokrzewski (Thedoczek). Licensed under AGPLv3. That means it's open source, forever!
+	</footer>
+	<script type="module">
+		import rawRules from "./rules.json" with { type: "json" };
+		import * as Engine from "../../assets/js/alphabet-engine.js";
+		import { attachTransliterator } from "../../assets/js/input-handler.js";
+
+		const MTAVRULI_FUNCTION = (text) => {
+			let output = "";
+			for (const char of text) {
+				const code = char.codePointAt(0);
+				if (code >= 0x10D0 && code <= 0x10FF) {
+					output += String.fromCodePoint(code + 0xBC0);
+				} else {
+					output += char.toUpperCase();
+				}
+			}
+			return output;
+		};
+
+		Engine.compileRules(rawRules, "BGN/PCGN", MTAVRULI_FUNCTION, null);
+
+		const box = document.getElementById('keyboard-input');
+		attachTransliterator(box, Engine);
+	</script>
+</body>
